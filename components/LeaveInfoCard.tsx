@@ -3,8 +3,7 @@ import React from 'react';
 import { LeaveData, LeaveDetail } from '../types';
 
 // ------------------------------------------------------------------
-// 请将下面的 URL 替换为您提供的图片的真实地址
-// PLEASE REPLACE THE URLS BELOW WITH THE ACTUAL IMAGE ADDRESSES YOU PROVIDED
+// 这里的路径对应项目根目录下 public 文件夹中的图片文件
 // ------------------------------------------------------------------
 const AUDIT_STAMP_URL = "/audit_stamp.png"; 
 const PASSED_STAMP_URL = "/passed_stamp.png";
@@ -31,11 +30,18 @@ export const LeaveInfoCard: React.FC<LeaveInfoCardProps> = ({ data }) => {
     { label: '请假附件', value: data.attachment },
   ];
 
-  // Determine stamp status
+  // Determine stamp status based on exact keywords
   let stampStatus: 'audit' | 'passed' | null = null;
-  if (data.status.includes('通过') || data.status === '已通过' || data.status === '审核通过') {
+  const status = data.status || '';
+
+  // 优先级逻辑：
+  // 1. 如果包含 "通过"、"已销假"，或者是 "审核通过"，则显示绿色印章
+  if (status.includes('通过') || status === '已通过' || status === '审核通过' || status === '已销假') {
     stampStatus = 'passed';
-  } else if (data.status.includes('审核') || data.status.includes('处理中') || data.status === '申请') {
+  } 
+  // 2. 否则，如果包含 "审核"、"申请"、"处理中"，则显示蓝色印章
+  // 注意："辅导员审核" 会进入这里，因为它不包含 "通过"
+  else if (status.includes('审核') || status.includes('处理中') || status === '申请') {
     stampStatus = 'audit';
   }
 
@@ -47,7 +53,7 @@ export const LeaveInfoCard: React.FC<LeaveInfoCardProps> = ({ data }) => {
         <h2 className="text-base font-bold text-gray-800">请假信息</h2>
       </div>
 
-      {/* Audit Stamp Image */}
+      {/* Audit Stamp Image (Blue) */}
       {stampStatus === 'audit' && (
         <img 
           src={AUDIT_STAMP_URL}
@@ -56,7 +62,7 @@ export const LeaveInfoCard: React.FC<LeaveInfoCardProps> = ({ data }) => {
         />
       )}
 
-      {/* Passed Stamp Image */}
+      {/* Passed Stamp Image (Green) */}
       {stampStatus === 'passed' && (
         <img 
           src={PASSED_STAMP_URL}
