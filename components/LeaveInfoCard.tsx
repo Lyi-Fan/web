@@ -4,6 +4,7 @@ import { LeaveData, LeaveDetail } from '../types';
 
 // ------------------------------------------------------------------
 // 这里的路径对应项目根目录下 public 文件夹中的图片文件
+// Vite 约定：放在 public 目录下的文件，在代码中直接用 "/" + 文件名 访问
 // ------------------------------------------------------------------
 const AUDIT_STAMP_URL = "/audit_stamp.png"; 
 const PASSED_STAMP_URL = "/passed_stamp.png";
