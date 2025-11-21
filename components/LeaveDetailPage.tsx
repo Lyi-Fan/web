@@ -19,7 +19,11 @@ export const LeaveDetailPage: React.FC<LeaveDetailPageProps> = ({ initialData })
       <LeaveInfoCard data={initialData} />
 
       {/* Timeline Section */}
-      <Timeline />
+      <Timeline 
+        applicantName={initialData.name} 
+        applyTime={initialData.applyTime} 
+        approvalTime={initialData.approvalTime}
+      />
       
       {/* Bottom Spacing */}
       <div className="h-8"></div>

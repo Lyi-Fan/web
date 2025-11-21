@@ -1,31 +1,56 @@
+
 import React from 'react';
-import { Check, Circle } from 'lucide-react';
-import { TimelineStep } from '../types';
+import { Check } from 'lucide-react';
 
-const steps: TimelineStep[] = [
-  {
-    status: '申请',
-    statusLabel: '申请',
-    statusColor: 'text-black',
-    statusLabelColor: 'text-green-500',
-    person: '刘一宏',
-    date: '2025-11-21 09:43',
-    isCompleted: true,
-    isCurrent: false,
-  },
-  {
-    status: '辅导员审核',
-    statusLabel: '处理中',
-    statusColor: 'text-black',
-    statusLabelColor: 'text-orange-400',
-    person: '叶瀚',
-    date: '',
-    isCompleted: false,
-    isCurrent: true,
-  },
-];
+interface TimelineItem {
+  status: string;
+  statusLabel?: string;
+  statusLabelColor?: string;
+  date?: string;
+  person?: string;
+  extraRight?: string;
+  extraRightColor?: string;
+  icon: 'check' | 'dot';
+}
 
-export const Timeline: React.FC = () => {
+interface TimelineProps {
+  applicantName?: string;
+  applyTime?: string;
+  approvalTime?: string;
+}
+
+export const Timeline: React.FC<TimelineProps> = ({ applicantName, applyTime, approvalTime }) => {
+  // Helper to format YYYY-MM-DD HH:mm:ss to YYYY-MM-DD HH:mm
+  const formatTime = (timeStr?: string) => {
+    if (!timeStr) return '';
+    return timeStr.substring(0, 16);
+  };
+
+  const steps: TimelineItem[] = [
+    {
+      status: '申请',
+      statusLabel: '申请',
+      statusLabelColor: 'text-[#00b578]',
+      date: formatTime(applyTime) || '2025-11-21 09:43', // Use real apply time if available
+      person: applicantName || '刘一宏', // Use dynamic name or default
+      icon: 'check',
+    },
+    {
+      status: '辅导员审核',
+      statusLabel: '审核通过',
+      statusLabelColor: 'text-[#00b578]',
+      date: formatTime(approvalTime) || '2025-11-21 14:15',
+      person: '叶瀚',
+      extraRight: '同意',
+      extraRightColor: 'text-[#3478f6]',
+      icon: 'check',
+    },
+    {
+      status: '结束',
+      icon: 'dot',
+    },
+  ];
+
   return (
     <div className="bg-white p-4">
        {/* Section Header */}
@@ -39,12 +64,12 @@ export const Timeline: React.FC = () => {
           <div key={index} className="relative flex pb-8 last:pb-0">
              {/* Connecting Line */}
             {index !== steps.length - 1 && (
-              <div className="absolute left-[11px] top-6 bottom-0 w-[2px] bg-[#b8cffc]"></div>
+              <div className="absolute left-[11px] top-6 bottom-0 w-[2px] bg-[#e0e0e0]"></div>
             )}
 
             {/* Icon */}
-            <div className="relative z-10 flex-shrink-0 mr-3 bg-white">
-                {step.isCompleted ? (
+            <div className="relative z-10 flex-shrink-0 mr-3 bg-white pr-1">
+                {step.icon === 'check' ? (
                    <div className="w-6 h-6 rounded-full border border-[#3478f6] flex items-center justify-center bg-white">
                        <Check size={14} className="text-[#3478f6]" strokeWidth={3} />
                    </div>
@@ -59,18 +84,29 @@ export const Timeline: React.FC = () => {
             <div className="flex-1 -mt-1">
                 <div className="flex justify-between items-start">
                     <div className="flex items-center gap-2">
-                        <span className={`font-medium text-[15px] ${step.statusColor}`}>{step.status}</span>
+                        <span className="font-bold text-[15px] text-gray-800">{step.status}</span>
                         {step.statusLabel && (
-                             <span className={`text-sm ${step.statusLabelColor}`}>{step.statusLabel}</span>
+                             <span className={`text-sm font-medium ${step.statusLabelColor}`}>{step.statusLabel}</span>
                         )}
                     </div>
                     {step.date && (
-                        <span className="text-gray-400 text-xs transform scale-90 origin-right">{step.date}</span>
+                        <span className="text-gray-400 text-xs pt-1">{step.date}</span>
                     )}
                 </div>
-                <div className="mt-2 text-gray-500 text-sm">
-                    {step.person}
-                </div>
+                
+                {/* Person and Extra Info */}
+                {(step.person || step.extraRight) && (
+                    <div className="flex justify-between items-center mt-1">
+                        <div className="text-gray-500 text-sm">
+                            {step.person}
+                        </div>
+                        {step.extraRight && (
+                             <div className={`text-sm font-medium ${step.extraRightColor || 'text-[#3478f6]'}`}>
+                                {step.extraRight}
+                             </div>
+                        )}
+                    </div>
+                )}
             </div>
           </div>
         ))}

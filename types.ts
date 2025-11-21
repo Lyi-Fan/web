@@ -19,7 +19,9 @@ export interface TimelineStep {
 export interface LeaveData {
   id?: string; // Unique identifier
   type: string;
+  name?: string; // Name of the applicant
   applyTime?: string; // Time the application was made
+  approvalTime?: string; // Time the application was approved
   destination: string;
   address: string;
   startTime: string;
