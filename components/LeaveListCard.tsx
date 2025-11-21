@@ -14,7 +14,7 @@ export const LeaveListCard: React.FC<LeaveListCardProps> = ({ data, onClick, isM
   return (
     <div 
       onClick={isManageMode ? undefined : onClick}
-      className={`bg-white p-4 mb-3 shadow-sm transition-colors relative ${!isManageMode ? 'active:bg-gray-50 cursor-pointer' : ''}`}
+      className={`bg-white p-4 mb-3 shadow-sm transition-colors relative rounded-sm ${!isManageMode ? 'active:bg-gray-50 cursor-pointer' : ''}`}
     >
       {/* Delete Button Overlay */}
       {isManageMode && (
@@ -41,16 +41,16 @@ export const LeaveListCard: React.FC<LeaveListCardProps> = ({ data, onClick, isM
       {/* Content Info */}
       <div className={`space-y-2 mb-3 ${isManageMode ? 'opacity-80' : ''}`}>
         <div className="flex text-[14px]">
-          <span className="text-gray-500 w-[70px] flex-shrink-0">开始时间:</span>
-          <span className="text-gray-500 font-mono">{data.startTime}</span>
+          <span className="text-gray-400 flex-shrink-0">开始时间:</span>
+          <span className="text-gray-400 font-mono">{data.startTime}</span>
         </div>
         <div className="flex text-[14px]">
-          <span className="text-gray-500 w-[70px] flex-shrink-0">结束时间:</span>
-          <span className="text-gray-500 font-mono">{data.endTime}</span>
+          <span className="text-gray-400 flex-shrink-0">结束时间:</span>
+          <span className="text-gray-400 font-mono">{data.endTime}</span>
         </div>
         <div className="flex text-[14px]">
-          <span className="text-gray-500 w-[70px] flex-shrink-0">请假理由:</span>
-          <span className="text-gray-500 line-clamp-1">{data.reason}</span>
+          <span className="text-gray-400 flex-shrink-0">请假理由:</span>
+          <span className="text-gray-400 line-clamp-1">{data.reason}</span>
         </div>
       </div>
 

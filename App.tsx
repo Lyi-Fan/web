@@ -1,6 +1,4 @@
-
-import React, { useState, useRef } from 'react';
-import { Header } from './components/Header';
+import React, { useState, useRef, useEffect } from 'react';
 import { Breadcrumb } from './components/Breadcrumb';
 import { LeaveListPage } from './components/LeaveListPage';
 import { LeaveDetailPage } from './components/LeaveDetailPage';
@@ -92,13 +90,46 @@ const App: React.FC = () => {
   const [isManageMode, setIsManageMode] = useState(false);
   const secondaryPageRef = useRef<HTMLDivElement>(null);
 
+  // Handle Browser Back Button
+  useEffect(() => {
+    const handlePopState = (event: PopStateEvent) => {
+      // If state exists, user is navigating forward/back within app history
+      // For this simple app, if we pop state and it's null or list, go to LIST
+      if (event.state && event.state.view) {
+        setViewMode(event.state.view);
+      } else {
+        // Fallback to list if no state (e.g. initial load or back to root)
+        setViewMode('LIST');
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  const navigateTo = (mode: ViewMode) => {
+    setViewMode(mode);
+    // Push new state to history so back button works
+    // If we are going to LIST, we might technically want to replace state or push, 
+    // but for simple drill-down, pushing is fine.
+    if (mode === 'LIST') {
+        // If going back to list manually (breadcrumb), we can either push 'LIST' 
+        // or simulate back. Let's push to keep it simple, or rely on handleBack logic.
+        // However, to support the "Breadcrumb click", we generally just want to go back.
+        // But if we push, we create a new forward entry.
+        // Let's use pushState for forward navigation (Detail/Form).
+    } else {
+        window.history.pushState({ view: mode }, '');
+    }
+  };
+
   const handleSelectLeave = (data: LeaveData) => {
     setSelectedLeave(data);
     // Reset scroll position
     if (secondaryPageRef.current) {
       secondaryPageRef.current.scrollTop = 0;
     }
-    setViewMode('DETAIL');
+    navigateTo('DETAIL');
   };
 
   const handleApply = () => {
@@ -106,7 +137,7 @@ const App: React.FC = () => {
     if (secondaryPageRef.current) {
       secondaryPageRef.current.scrollTop = 0;
     }
-    setViewMode('FORM');
+    navigateTo('FORM');
   };
 
   const handleCreateLeave = (data: LeaveData) => {
@@ -118,7 +149,8 @@ const App: React.FC = () => {
     };
     
     setLeaves((prev) => [newLeave, ...prev]);
-    setViewMode('LIST');
+    // Go back to list
+    window.history.back();
   };
 
   const handleDeleteLeave = (id: string) => {
@@ -127,33 +159,20 @@ const App: React.FC = () => {
     }
   };
 
-  const handleBack = () => {
+  // This is called by breadcrumb or explicit back buttons
+  const handleBackToList = () => {
     if (viewMode !== 'LIST') {
-      setViewMode('LIST');
-    } else if (isManageMode) {
-      setIsManageMode(false);
+      // Trigger browser back, which will fire popstate and update viewMode
+      window.history.back();
     }
   };
-
-  // Define menu actions based on current state
-  const menuActions = [
-    {
-      label: isManageMode ? '完成' : '管理',
-      onClick: () => setIsManageMode(!isManageMode),
-      color: isManageMode ? 'text-blue-600 font-medium' : ''
-    }
-  ];
 
   return (
     <div className="min-h-screen bg-[#f3f4f6] flex justify-center">
       {/* Mobile container simulation */}
       <div className="w-full max-w-[480px] bg-[#f3f4f6] shadow-lg min-h-screen flex flex-col relative overflow-hidden">
         
-        <Header 
-          onBack={handleBack} 
-          menuActions={viewMode === 'LIST' ? menuActions : []} 
-        />
-        <Breadcrumb />
+        <Breadcrumb viewMode={viewMode} onNavigate={handleBackToList} />
         
         {/* Main Content Area with Sliding Transition */}
         <main className="flex-1 relative overflow-hidden w-full">
@@ -170,6 +189,7 @@ const App: React.FC = () => {
               onApply={handleApply}
               isManageMode={isManageMode}
               onDeleteLeave={handleDeleteLeave}
+              onToggleManage={() => setIsManageMode(!isManageMode)}
             />
           </div>
 
@@ -187,7 +207,7 @@ const App: React.FC = () => {
                <LeaveForm 
                  initialData={emptyLeaveData} 
                  onSubmit={handleCreateLeave} 
-                 onCancel={() => setViewMode('LIST')} 
+                 onCancel={handleBackToList} 
                />
              )}
           </div>
