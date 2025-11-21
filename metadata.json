@@ -1,0 +1,5 @@
+{
+  "name": "Leave Management System",
+  "description": "A responsive replica of a mobile leave management system interface featuring leave details, status tracking, and approval timeline.",
+  "requestFramePermissions": []
+}
