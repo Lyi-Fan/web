@@ -59,7 +59,7 @@ export const LeaveInfoCard: React.FC<LeaveInfoCardProps> = ({ data }) => {
         <img 
           src={AUDIT_STAMP_URL}
           alt="审核中"
-          className="absolute top-10 right-2 w-28 opacity-80 z-0 pointer-events-none object-contain"
+          className="absolute top-10 right-2 w-24 opacity-80 z-0 pointer-events-none object-contain"
         />
       )}
 
@@ -68,7 +68,7 @@ export const LeaveInfoCard: React.FC<LeaveInfoCardProps> = ({ data }) => {
         <img 
           src={PASSED_STAMP_URL}
           alt="已通过"
-          className="absolute top-10 right-2 w-28 opacity-80 z-0 pointer-events-none object-contain"
+          className="absolute top-10 right-2 w-24 opacity-80 z-0 pointer-events-none object-contain"
         />
       )}
 
