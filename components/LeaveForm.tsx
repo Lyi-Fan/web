@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { LeaveData } from '../types';
 import { Save, X } from 'lucide-react';
@@ -36,7 +35,7 @@ const getCurrentTimeAppFormat = () => {
 };
 
 // Component definitions outside main function to prevent re-mounting
-const Label = ({ children }: { children: React.ReactNode }) => (
+const Label = ({ children }: { children?: React.ReactNode }) => (
   <label className="block text-gray-600 text-sm font-medium mb-1">{children}</label>
 );
 
