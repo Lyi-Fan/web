@@ -2,12 +2,11 @@ import React from 'react';
 import { LeaveData, LeaveDetail } from '../types';
 
 // ------------------------------------------------------------------
-// 修改说明：
-// 为了适配 GitHub Pages (或其他子目录部署)，这里去掉了路径最前面的 "/"
-// 配合 vite.config.ts 中的 base: './'，浏览器会寻找当前目录下的 public 图片
+// 恢复为 Vercel/根目录部署模式
+// 使用绝对路径 "/" 开头，Vite 会自动从 public 文件夹读取
 // ------------------------------------------------------------------
-const AUDIT_STAMP_URL = "audit_stamp.png"; 
-const PASSED_STAMP_URL = "passed_stamp.png";
+const AUDIT_STAMP_URL = "/audit_stamp.png"; 
+const PASSED_STAMP_URL = "/passed_stamp.png";
 // ------------------------------------------------------------------
 
 interface LeaveInfoCardProps {
@@ -41,7 +40,6 @@ export const LeaveInfoCard: React.FC<LeaveInfoCardProps> = ({ data }) => {
     stampStatus = 'passed';
   } 
   // 2. 否则，如果包含 "审核"、"申请"、"处理中"，则显示蓝色印章
-  // 注意："辅导员审核" 会进入这里，因为它不包含 "通过"
   else if (status.includes('审核') || status.includes('处理中') || status === '申请') {
     stampStatus = 'audit';
   }
