@@ -1,13 +1,13 @@
-
 import React from 'react';
 import { LeaveData, LeaveDetail } from '../types';
 
 // ------------------------------------------------------------------
-// 这里的路径对应项目根目录下 public 文件夹中的图片文件
-// Vite 约定：放在 public 目录下的文件，在代码中直接用 "/" + 文件名 访问
+// 修改说明：
+// 为了适配 GitHub Pages (或其他子目录部署)，这里去掉了路径最前面的 "/"
+// 配合 vite.config.ts 中的 base: './'，浏览器会寻找当前目录下的 public 图片
 // ------------------------------------------------------------------
-const AUDIT_STAMP_URL = "/audit_stamp.png"; 
-const PASSED_STAMP_URL = "/passed_stamp.png";
+const AUDIT_STAMP_URL = "audit_stamp.png"; 
+const PASSED_STAMP_URL = "passed_stamp.png";
 // ------------------------------------------------------------------
 
 interface LeaveInfoCardProps {
